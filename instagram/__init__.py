@@ -29,6 +29,9 @@ def fazerLogin(usuario, senha):
     res = req.json()
     atualizarCSRFToken(session, req.cookies["csrftoken"])
 
+    if res["status"] != "ok" or res["authenticated"] != True:
+        raise Exception("Erro no login: %s" % res)
+
     print("Logado com sucesso!")
     print()
 
