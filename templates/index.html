@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+</head>
+<body>
+    <div id="comentarios" ></div>
+    <script>
+        var a=0;
+
+        function mostrarResponder(id){
+            var resposta = prompt("Responder");
+
+            if (resposta == null || resposta == "") return;
+
+            $.post({
+                url: "/responder/" + id,
+                data: "resposta=" + resposta,
+                dataType: "json",
+                success: function(data){
+                    console.log(data);
+                }
+            });
+        }
+    </script>
+    <script>
+        var div_comentarios = document.getElementById("comentarios");
+
+        function getComentarios(){
+            $.ajax({
+                type: "get",
+                url: "comentarios",
+                dataType: "json",
+                success: function(data){
+                    data = data.data;
+                    
+                    while (a < data.length){
+                        var comentario = document.createElement("div");
+                        comentario.id = data[a].id;
+                        
+                        var autor = document.createElement("a");
+                        autor.id = data[a].from.id;
+                        autor.innerHTML = data[a].from.name;
+                        autor.href = "//fb.com/profile?id=" + autor.id;
+
+                        var mensagem = document.createElement("p");
+                        mensagem.innerHTML = data[a].message;
+
+                        var bt_responder = document.createElement("button");
+                        bt_responder.innerHTML = "Responder";
+                        bt_responder.onclick = function (){
+                            mostrarResponder(comentario.id);
+                        };
+
+                        console.log("Novo comentario de " + autor.innerHTML + ": " + mensagem.innerHTML);
+
+                        comentario.appendChild(autor);
+                        comentario.appendChild(mensagem);
+                        comentario.appendChild(bt_responder);
+                        div_comentarios.appendChild(comentario);
+                        a+=1;
+                    }
+                }
+            });
+            
+            setTimeout(getComentarios, 500);
+        }
+
+        //getComentarios();
+    </script>
+</body>
+</html>
