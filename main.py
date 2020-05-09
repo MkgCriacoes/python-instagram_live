@@ -50,11 +50,7 @@ def criarStream():
 
     stream = instagram.getStream()
 
-    return {
-        "live_id" : stream.id,
-        "stream_url" : stream.url,
-        "stream_key" : stream.key
-    }
+    return redirect("/")
 
 @app.route("/stream/iniciar")
 def iniciarStream():
@@ -63,23 +59,27 @@ def iniciarStream():
         return redirect("/login")
 
     if stream is None:
-        return "Erro: Você deve criar o stream antes de iniciar"
+        print("Erro: Você deve criar o stream antes de iniciar")
+        return redirect("/?erro&mensagem=Você deve criar o stream antes de iniciar")
     
     stream.iniciar()
-    return "Stream Iniciado"
+    return redirect("/")
 
 @app.route("/stream/encerrar")
 def encerrarStream():
+    global stream
+    
     if not logado:
         print("Erro: Faça o login antes de tentar encerrar uma stream")
         return redirect("/login")
 
     if stream is None:
-        return "Erro: Não existe streams para encerrar"
+        print("Erro: Não existe streams para encerrar")
+        return redirect("/?erro&mensagem=Não existe streams para encerrar")
 
     stream.encerrar()
     stream = None
-    return "Stream Encerrado"
+    return redirect ("/?mensagem=Stream encerrado!")
 
 @app.route("/responder/<id>", methods=["POST"])
 def responder(id):
@@ -105,7 +105,10 @@ def index():
     if not logado:
         return redirect("/login")
 
-    return render_template("index.html", login=logado)
+    erro = request.args.get("erro")
+    mensagem = request.args.get("mensagem")
+
+    return render_template("index.html", login=logado, stream=stream, erro=erro, mensagem=mensagem)
 
 if __name__ == '__main__':
     app.run(port=80, debug=True)

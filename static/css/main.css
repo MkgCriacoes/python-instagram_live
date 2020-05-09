@@ -1,0 +1,15 @@
+.userId{
+    color: #0000FF;
+}
+
+input{
+    height: 30px;
+    border-radius: 15px;
+}
+
+input[type="submit"], input[type="button"]{
+    background-color: #0000FF;
+    color: #FFFFFF;
+    cursor: pointer;
+    font-size: 18px;
+}

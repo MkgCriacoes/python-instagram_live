@@ -3,9 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 </head>
 <body>
-    <div>Seja bem vindo, @{{ login }}</div>
+    <h2>Seja bem vindo, <span class="userId">@{{ login }}</span></h2>
+    <div id="div_stream">
+        {% if not stream %}
+            <input onclick="location.href='/stream/criar'" type="button" value="Criar Stream" />
+        {% elif not stream.iniciado %}
+            <div>
+                <input type="text" name="id" value="{{ stream.id }}" readonly/>
+                <input type="text" name="url" value="{{ stream.url }}" readonly/>
+                <input type="text" name="key" value="{{ stream.key }}" readonly/>
+                <input onclick="location.href='/stream/iniciar'"type="button" value="Iniciar Stream" />
+            </div>
+        {% else %}
+            <input type="text" name="id" value="{{ stream.id }}" readonly/>
+            <input type="text" name="url" value="{{ stream.url }}" readonly/>
+            <input type="text" name="key" value="{{ stream.key }}" readonly/>
+            <input onclick="location.href='/stream/encerrar'" type="button" value="Encerrar Stream" />
+        {% endif %}
+    </div>
     <div id="comentarios" ></div>
     <script>
         var a=0;
@@ -70,5 +88,26 @@
 
         //getComentarios();
     </script>
+    {% if erro %}
+        {% if mensagem %}
+            <script>
+                alert("Erro: {{ mensagem }}");
+            </script>
+        {% else %}
+            <script>
+                alert("Erro: Ocorreu um erro desconhecido!");
+            </script>
+        {% endif %}
+        <script>
+            location.href = ".";
+        </script>
+    {% elif mensagem %}
+        <script>
+            alert("{{ mensagem }}");
+        </script>
+        <script>
+            location.href = ".";
+        </script>
+    {% endif %}
 </body>
 </html>
