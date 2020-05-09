@@ -2,6 +2,7 @@ import instagram
 import time
 import flask
 from flask import Flask, render_template, request, redirect
+import json
 
 app = Flask(__name__)
 
@@ -34,10 +35,8 @@ def fazerLogin():
         instagram.fazerLogin(usuario, senha)
         logado = usuario
 
-        print("Logado com sucesso!")
         return redirect("/")
     except:
-        print("Login invalido!")
         return redirect("/login?status=Login invalido!")
 
 @app.route("/stream/criar")
@@ -90,15 +89,15 @@ def responder(id):
 def getComentarios():
     global comentarios
     
-    novosComentarios = [] #instagram.getComentarios()
+    novosComentarios = instagram.getComentarios(stream)
     if comentarios == novosComentarios:
         time.sleep(0.5)
-        return comentarios
+        return str(comentarios)
     
     comentarios = novosComentarios
     print("Novo comentário")
 
-    return comentarios
+    return json.dumps(comentarios)
 
 @app.route("/")
 def index():

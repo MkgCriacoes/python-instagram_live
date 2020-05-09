@@ -1,0 +1,24 @@
+class Comentario:
+    def __init__(self, id, dt_envio, texto, usuario):
+        self.id = id
+        self.dt_envio = dt_envio
+        self.texto = texto
+        self.usuario = usuario
+    
+    def responder(self):
+        pass
+
+    def ocultar(self):
+        pass
+
+    def toJson(self):
+        return {
+            "id": self.id,
+            "dt_envio": self.dt_envio,
+            "texto": self.texto,
+            "usuario": {
+                "id": self.usuario.id,
+                "nome": self.usuario.nome,
+                "img": self.usuario.img
+            }
+        }

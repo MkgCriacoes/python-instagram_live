@@ -1,4 +1,6 @@
 from .stream import Stream
+from .model.usuario import Usuario
+from .model.comentario import Comentario
 import requests
 
 #https://i.instagram.com/api/v1/live/" + live_id+ "/get_comment/?last_comment_ts=0
@@ -48,3 +50,30 @@ def getJoinRequests():
 def getStream():
     stream = Stream(session)
     return stream
+
+def getComentarios(stream):
+    req = session.get("https://i.instagram.com/api/v1/live/" + stream.id+ "/get_comment/", data={
+        "last_comment_ts" : 0
+    })
+    res = req.json()
+
+    comentarios = []
+    for c in res["comments"]:
+        c_id = c["pk"]
+        c_dt_envio = c["created_at"]
+        c_texto = c["text"]
+        
+        u = c["user"]
+        u_id = u["pk"]
+        u_nome = u["username"]
+        u_img = u["profile_pic_url"]
+
+        usuario = Usuario(u_id, u_nome, u_img)
+        comentario = Comentario(c_id, c_dt_envio, c_texto, usuario)
+        
+        comentarios.append(comentario.toJson())
+    
+    print(res)
+    print()
+
+    return comentarios
