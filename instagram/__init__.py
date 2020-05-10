@@ -65,22 +65,41 @@ def getComentarios(stream, last_comment):
         return []
 
     comentarios = []
-    for c in res["comments"]:
-        c_id = c["pk"]
-        c_dt_envio = c["created_at"]
-        c_texto = c["text"]
-        
-        u = c["user"]
-        u_id = u["pk"]
-        u_nome = u["username"]
-        u_img = u["profile_pic_url"]
+    
+    if res["comments"] is not None:
+        for c in res["comments"]:
+            c_id = c["pk"]
+            c_dt_envio = c["created_at"]
+            c_texto = c["text"]
+            
+            u = c["user"]
+            u_id = u["pk"]
+            u_nome = u["username"]
+            u_img = u["profile_pic_url"]
 
-        if (int(c_dt_envio) <= int(last_comment)):
-            continue
+            if (int(c_dt_envio) <= int(last_comment)):
+                continue
 
-        usuario = Usuario(u_id, u_nome, u_img)
-        comentario = Comentario(c_id, c_dt_envio, c_texto, usuario)
-        
-        comentarios.append(comentario.toJson())
+            usuario = Usuario(u_id, u_nome, u_img)
+            comentario = Comentario(c_id, c_dt_envio, c_texto, usuario)
+            
+            comentarios.append(comentario.toJson())
+
+    if res["system_comments"] is not None:
+        for c in res["system_comments"]:
+            c_id = c["pk"]
+            c_dt_envio = c["created_at"]
+            c_texto = c["text"].replace("joined", "entrou")
+            
+            u = c["user"]
+            u_img = u["profile_pic_url"]
+
+            if (int(c_dt_envio) <= int(last_comment)):
+                continue
+
+            usuario = Usuario("", "", u_img)
+            comentario = Comentario(c_id, c_dt_envio, c_texto, usuario)
+            
+            comentarios.append(comentario.toJson())
 
     return comentarios

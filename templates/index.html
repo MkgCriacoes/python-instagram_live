@@ -54,9 +54,12 @@
                         comentario.id = c_id;
                         
                         var autor = document.createElement("a");
-                        autor.id = u_id;
                         autor.innerHTML = "<img src=\"" + u_img + "\" />" + "<span class=\"userId\">@" + u_nome + "</span>";
-                        autor.href = "//instagram.com/" + u_nome;
+                        
+                        if(u_id != "" && u_nome != ""){
+                            autor.id = u_id;
+                            autor.href = "//instagram.com/" + u_nome;
+                        }else autor.innerHTML = autor.innerHTML.replace("@", "Sistema");
 
                         var mensagem = document.createElement("p");
                         mensagem.innerHTML = c_texto;
