@@ -3,3 +3,10 @@ class Usuario:
         self.id = id
         self.nome = nome
         self.img = img
+
+    def toJson(self):
+        return {
+            "id": self.id,
+            "nome": self.nome,
+            "img": self.img
+        }

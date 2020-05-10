@@ -11,6 +11,7 @@ session.headers = {
 from .login import LoginMgr
 from .comentario import ComentarioMgr
 from .stream import Stream
+from .model.usuario import Usuario
 
 LoginMgr = LoginMgr(session)
 ComentarioMgr = ComentarioMgr(session)
@@ -21,15 +22,30 @@ ComentarioMgr = ComentarioMgr(session)
 def fazerLogin(usuario, senha):
     return LoginMgr.fazerLogin(usuario, senha)
 
-def getJoinRequests():
-    req = session.get("https://i.instagram.com/api/v1/live/" + live_id+ "/get_join_request_counts/", data={
-        "last_total_count": 0,
-        "last_seen_ts": 0,
-        "last_fetch_ts": 0
+def getJoinRequests(self, stream, last_joinRequest):
+    req = session.get("https://i.instagram.com/api/v1/live/" + stream.id+ "/get_join_request_counts/", data={
+        "last_seen_ts": last_joinRequest,
+        "last_fetch_ts": last_joinRequest
     })
     res = req.json()
     print(res)
     print()
+
+    joinRequests = []
+    j_dt_envio = res["fetch_ts"]
+    if (j_dt_envio is None) or (int(j_dt_envio) <= int(last_joinRequest)):
+        return joinRequests
+    
+    if res["users"]:
+        for j in res["users"]:
+            u_id = j["pk"]
+            u_nome = j["username"]
+            u_img = j["profile_pic_url"]
+
+            usuario = Usuario(u_id, u_nome, u_img)
+            joinRequests.append(usuario.toJson())
+    
+    return joinRequests
 
 def getStream():
     stream = Stream(session)

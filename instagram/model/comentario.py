@@ -13,9 +13,5 @@ class Comentario:
             "id": self.id,
             "dt_envio": self.dt_envio,
             "texto": self.texto,
-            "usuario": {
-                "id": self.usuario.id,
-                "nome": self.usuario.nome,
-                "img": self.usuario.img
-            }
+            "usuario": self.usuario.toJson()
         }
