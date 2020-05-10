@@ -22,6 +22,16 @@ ComentarioMgr = ComentarioMgr(session)
 def fazerLogin(usuario, senha):
     return LoginMgr.fazerLogin(usuario, senha)
 
+def desconectar():
+    global session
+    LoginMgr.desconectar()
+
+    session = requests.Session()
+    session.headers = {
+        "user-agent" : USER_AGENT,
+        "Referer" : "https://www.instagram.com/"
+    }
+
 def getJoinRequests(self, stream, last_joinRequest):
     req = session.get("https://i.instagram.com/api/v1/live/" + stream.id+ "/get_join_request_counts/", data={
         "last_seen_ts": last_joinRequest,

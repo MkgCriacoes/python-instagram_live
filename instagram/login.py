@@ -23,3 +23,8 @@ class LoginMgr:
 
         print("Logado com sucesso!")
         print()
+
+    def desconectar(self):
+        req = self.__session.post("https://www.instagram.com/accounts/logout/ajax/")
+        res = req.text
+        print(res)

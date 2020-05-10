@@ -38,3 +38,12 @@ class Login:
             except Exception as e:
                 print (e)
                 return redirect("/login?status=Login invalido!")
+
+        @app.route("/login/sair", methods=["GET"])
+        def desconectar():
+            if not self.__logado:
+                return redirect("/")
+            
+            instagram.desconectar()
+            self.__logado = False
+            return redirect("/?sair=")
