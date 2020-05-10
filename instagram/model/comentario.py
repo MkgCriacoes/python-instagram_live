@@ -4,9 +4,6 @@ class Comentario:
         self.dt_envio = dt_envio
         self.texto = texto
         self.usuario = usuario
-    
-    def responder(self):
-        pass
 
     def ocultar(self):
         pass

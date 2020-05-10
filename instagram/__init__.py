@@ -3,6 +3,7 @@ from .model.usuario import Usuario
 from .model.comentario import Comentario
 import requests
 
+#https://instagram.fnat1-1.fna.fbcdn.net/hvideo-vll2/_nc_cat-110/v/r-ggunUiM2nPQW78cwTI2/live-dash/live-hd-a/17943426871352037_0-3521800.m4a
 #https://i.instagram.com/api/v1/live/" + live_id+ "/get_comment/?last_comment_ts=0
 #https://i.instagram.com/api/v1/live/" + live_id+ "/get_final_viewer_list/
 
@@ -51,11 +52,17 @@ def getStream():
     stream = Stream(session)
     return stream
 
-def getComentarios(stream):
+def getComentarios(stream, last_comment):
     req = session.get("https://i.instagram.com/api/v1/live/" + stream.id+ "/get_comment/", data={
-        "last_comment_ts" : 0
+        "last_comment_ts" : last_comment
     })
     res = req.json()
+
+    print(res)
+    print()
+
+    if res["status"] != "ok":
+        return []
 
     comentarios = []
     for c in res["comments"]:
@@ -68,12 +75,12 @@ def getComentarios(stream):
         u_nome = u["username"]
         u_img = u["profile_pic_url"]
 
+        if (int(c_dt_envio) <= int(last_comment)):
+            continue
+
         usuario = Usuario(u_id, u_nome, u_img)
         comentario = Comentario(c_id, c_dt_envio, c_texto, usuario)
         
         comentarios.append(comentario.toJson())
-    
-    print(res)
-    print()
 
     return comentarios

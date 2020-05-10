@@ -25,22 +25,7 @@
     </div>
     <div id="comentarios" ></div>
     <script>
-        var a=0;
-
-        function mostrarResponder(id){
-            var resposta = prompt("Responder");
-
-            if (resposta == null || resposta == "") return;
-
-            $.post({
-                url: "/responder/" + id,
-                data: "resposta=" + resposta,
-                dataType: "json",
-                success: function(data){
-                    console.log(data);
-                }
-            });
-        }
+        var lastComent = 0;
     </script>
     {% if stream and stream.iniciado %}
     <script>
@@ -50,12 +35,10 @@
             $.ajax({
                 type: "get",
                 url: "comentarios",
+                data: "lastComent=" + lastComent,
                 dataType: "json",
                 success: function(data){
-                    while (a < data.length){
-                        var comentario = document.createElement("div");
-                        comentario.id = data[a].id;
-                        
+                    for (var a=0; a < data.length; a+=1){
                         var c_id = data[a].id,
                             c_dt_envio = data[a].dt_envio,
                             c_texto = data[a].texto;
@@ -64,34 +47,37 @@
                             u_id = u.id,
                             u_nome = u.nome,
                             u_img = u.img;
+
+                        lastComent = c_dt_envio;
+
+                        var comentario = document.createElement("div");
+                        comentario.id = c_id;
                         
                         var autor = document.createElement("a");
                         autor.id = u_id;
-                        autor.className = "userId"
-                        autor.innerHTML = "<img src=\"" + u_img + "\" />" + "@" + u_nome;
+                        autor.innerHTML = "<img src=\"" + u_img + "\" />" + "<span class=\"userId\">@" + u_nome + "</span>";
                         autor.href = "//instagram.com/" + u_nome;
 
                         var mensagem = document.createElement("p");
                         mensagem.innerHTML = c_texto;
 
-                        var bt_responder = document.createElement("button");
-                        bt_responder.innerHTML = "Responder";
-                        bt_responder.onclick = function (){
-                            mostrarResponder(comentario.id);
-                        };
-
-                        console.log("Novo comentario de " + autor.innerHTML + ": " + mensagem.innerHTML);
+                        console.log("Novo comentario de " + u_nome + ": " + c_texto);
 
                         comentario.appendChild(autor);
                         comentario.appendChild(mensagem);
-                        comentario.appendChild(bt_responder);
                         div_comentarios.appendChild(comentario);
                         a+=1;
+
+                        div_comentarios.scrollTo(0, div_comentarios.scrollHeight)
                     }
+
+                    setTimeout(getComentarios, 500);
+                },
+                error: function(xhr, status, e){
+                    console.log(e);
+                    setTimeout(getComentarios, 300);
                 }
             });
-            
-            setTimeout(getComentarios, 2000);
         }
 
         getComentarios();

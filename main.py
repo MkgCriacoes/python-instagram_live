@@ -6,7 +6,6 @@ import json
 
 app = Flask(__name__)
 
-comentarios = []
 stream = None
 logado = False
 
@@ -80,22 +79,13 @@ def encerrarStream():
     stream = None
     return redirect ("/?mensagem=Stream encerrado!")
 
-@app.route("/responder/<id>", methods=["POST"])
-def responder(id):
-    #instagram.responderComentario()
-    pass
-
 @app.route("/comentarios")
 def getComentarios():
-    global comentarios
-    
-    novosComentarios = instagram.getComentarios(stream)
-    if comentarios == novosComentarios:
-        time.sleep(0.5)
-        return str(comentarios)
-    
-    comentarios = novosComentarios
-    print("Novo comentário")
+    lastComent = request.args.get("lastComent")
+
+    comentarios = instagram.getComentarios(stream, lastComent)
+    if (len(comentarios) > 0):
+        print("Novos comentários")
 
     return json.dumps(comentarios)
 

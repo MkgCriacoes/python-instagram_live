@@ -2,3 +2,32 @@ input[type="text"]{
     width: 400px;
     margin: 10px;
 }
+
+#comentarios{
+    height: 400px;
+    overflow-y: auto;
+}
+
+#comentarios div{
+    width: 500px;
+    margin-top: 25px;
+    font-size: 14pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#comentarios img{
+    border-radius: 40px;
+    width: 60px;
+    float: left;
+}
+
+#comentarios .userId{
+    position: relative;
+    top: 5px;
+}
+
+#comentarios p{
+    position: relative;
+    left: 18px;
+    top: -6px;
+}
