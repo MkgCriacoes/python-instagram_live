@@ -20,7 +20,10 @@
             </div>
         {% else %}
             <input type="text" name="id" value="{{ stream.id }}" readonly/><br>
-            <input onclick="location.href='/stream/encerrar'" type="button" value="Encerrar Stream" />
+            <div style="display: inline-flex;" >
+                <div id="assistindo"></div>
+                <input onclick="location.href='/stream/encerrar'" style="margin-left: 70px;" type="button" value="Encerrar Stream" />
+            </div>
         {% endif %}
     </div>
     <div id="comentarios" ></div>
@@ -74,11 +77,11 @@
                         div_comentarios.scrollTo(0, div_comentarios.scrollHeight)
                     }
 
-                    setTimeout(getComentarios, 500);
+                    setTimeout(getComentarios, 800);
                 },
                 error: function(xhr, status, e){
                     console.log(e);
-                    setTimeout(getComentarios, 300);
+                    setTimeout(getComentarios, 500);
                 }
             });
         }
@@ -86,6 +89,7 @@
         getComentarios();
     </script>
     <script>
+        var div_asistindo = document.getElementById("assistindo");
         function getInfo(){
             $.ajax({
                 type: "get",
@@ -94,13 +98,21 @@
                 success: function(data){
                     console.log(data);
 
-                    var viewCount = data.viewCount;
+                    var viewCount = data.viewer_count;
+                    var status = data.broadcast_status;
 
-                    setTimeout(getInfo, 1200);
+                    div_asistindo.innerHTML = "AO VIVO<span>" + viewCount + "</span>";
+
+                    if (status == "stoped"){
+                        location.href = "stream/encerrar";
+                        return;
+                    }
+
+                    setTimeout(getInfo, 2000);
                 },
                 error: function(xhr, status, e){
                     console.log(e);
-                    setTimeout(getInfo, 1000);
+                    setTimeout(getInfo, 1500);
                 }
             });
         }
