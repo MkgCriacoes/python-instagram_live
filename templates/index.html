@@ -85,6 +85,28 @@
 
         getComentarios();
     </script>
+    <script>
+        function getInfo(){
+            $.ajax({
+                type: "get",
+                url: "stream/info",
+                dataType: "json",
+                success: function(data){
+                    console.log(data);
+
+                    var viewCount = data.viewCount;
+
+                    setTimeout(getInfo, 1200);
+                },
+                error: function(xhr, status, e){
+                    console.log(e);
+                    setTimeout(getInfo, 1000);
+                }
+            });
+        }
+
+        getInfo();
+    </script>
     {% endif %}
     {% if erro %}
         {% if mensagem %}

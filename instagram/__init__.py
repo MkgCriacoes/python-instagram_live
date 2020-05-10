@@ -103,3 +103,11 @@ def getComentarios(stream, last_comment):
             comentarios.append(comentario.toJson())
 
     return comentarios
+
+def getInfo(stream):
+    req = session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/heartbeat_and_get_viewer_count/")
+    res = req.json()
+
+    print(res)
+
+    return res

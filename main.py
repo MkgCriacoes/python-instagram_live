@@ -79,6 +79,10 @@ def encerrarStream():
     stream = None
     return redirect ("/?mensagem=Stream encerrado!")
 
+@app.route("/stream/info")
+def getInfo():
+    return instagram.getInfo(stream)
+
 @app.route("/comentarios")
 def getComentarios():
     lastComent = request.args.get("lastComent")
