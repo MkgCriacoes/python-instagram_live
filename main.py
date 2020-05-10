@@ -35,7 +35,8 @@ def fazerLogin():
         logado = usuario
 
         return redirect("/")
-    except:
+    except Exception as e:
+        print (e)
         return redirect("/login?status=Login invalido!")
 
 @app.route("/stream/criar")
