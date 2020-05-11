@@ -11,6 +11,9 @@ class Stream:
     def value(self):
         return self.__stream
 
+    def refreshStream(self):
+        self.__stream = None
+
     def rotas(self, app):
         @app.route("/stream/criar")
         def criarStream():

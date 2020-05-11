@@ -23,10 +23,10 @@ def fazerLogin(usuario, senha):
     return LoginMgr.fazerLogin(usuario, senha)
 
 def desconectar():
-    global session
     LoginMgr.desconectar()
 
-    session = requests.Session()
+    session.cookies.clear_session_cookies()
+    session.headers.clear()
     session.headers = {
         "user-agent" : USER_AGENT,
         "Referer" : "https://www.instagram.com/"

@@ -46,4 +46,4 @@ class Login:
             
             instagram.desconectar()
             self.__logado = False
-            return redirect("/?sair=")
+            return redirect("/?sair=true")

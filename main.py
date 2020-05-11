@@ -24,6 +24,10 @@ def getComentarios():
 
 @app.route("/")
 def index():
+    sair = request.args.get("sair")
+    if sair is not None:
+        stream.refreshStream()
+
     if not login.value:
         return redirect("/login")
 
