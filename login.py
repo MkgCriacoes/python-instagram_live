@@ -3,17 +3,19 @@ from flask import request, redirect, render_template
 
 class Login:
     def __init__(self, app):
-        self.__logado = False
         self.rotas(app)
 
     @property
     def value(self):
-        return self.__logado
+        logado = request.cookies.get("usuario")
+        if logado is None:
+            return False
+        return logado
 
     def rotas(self, app):
         @app.route("/login", methods=["GET"])
         def login():
-            if self.__logado:
+            if self.value:
                 return redirect("/")
 
             status = request.args.get("status")
@@ -24,7 +26,7 @@ class Login:
 
         @app.route("/login", methods=["POST"])
         def fazerLogin():
-            if self.__logado:
+            if self.value:
                 return redirect("/")
             
             usuario = request.form.get("usuario")
@@ -32,18 +34,30 @@ class Login:
 
             try:
                 instagram.fazerLogin(usuario, senha)
-                self.__logado = usuario
 
-                return redirect("/")
+                res = redirect("/")
+                cookies = instagram.LoginMgr.getCookies()
+                for c in cookies:
+                    if ".com" not in c.domain:
+                        res.set_cookie(c.name, c.value)
+                    else:
+                        res.set_cookie("i." + c.name, c.value)
+
+                return res
             except Exception as e:
                 print (e)
                 return redirect("/login?status=Login invalido!")
 
         @app.route("/login/sair", methods=["GET"])
         def desconectar():
-            if not self.__logado:
+            if not self.value:
                 return redirect("/")
+
+            res = redirect("/?sair=true")
+            for c in request.cookies:
+                print("Deletando cookie: " + c)
+                res.delete_cookie(c)
             
             instagram.desconectar()
-            self.__logado = False
-            return redirect("/?sair=true")
+
+            return res

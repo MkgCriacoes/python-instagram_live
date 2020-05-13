@@ -1,11 +1,17 @@
+from flask import request
+
 from .model.usuario import Usuario
 from .model.comentario import Comentario
 
 class ComentarioMgr:
-    def __init__(self, session):
-        self.__session = session
+    def __init__(self, getSession):
+        self.__session = None
+        self.__getSession = getSession
 
     def getComentarios(self, stream, last_comment):
+        self.__session = self.__getSession()
+        self.__session.headers.update({"X-CSRFToken": request.cookies.get("csrf_token")})
+
         req = self.__session.get("https://i.instagram.com/api/v1/live/" + stream.id+ "/get_comment/", data={
             "last_comment_ts" : last_comment
         })

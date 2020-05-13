@@ -9,6 +9,7 @@ class Stream:
 
     @property
     def value(self):
+        self.__stream = instagram.getStream(False)
         return self.__stream
 
     def refreshStream(self):
@@ -23,7 +24,13 @@ class Stream:
 
             self.__stream = instagram.getStream()
 
-            return redirect("/")
+            res = redirect("/")
+            res.set_cookie("stream_id", self.__stream.id)
+            res.set_cookie("stream_url", self.__stream.url)
+            res.set_cookie("stream_key", self.__stream.key)
+            res.set_cookie("stream_status", "criado")
+
+            return res
 
         @app.route("/stream/iniciar")
         def iniciarStream():
@@ -36,7 +43,11 @@ class Stream:
                 return redirect("/?erro&mensagem=Você deve criar o stream antes de iniciar")
             
             self.__stream.iniciar()
-            return redirect("/")
+
+            res = redirect("/")
+            res.set_cookie("stream_status", "iniciado")
+
+            return res
 
         @app.route("/stream/encerrar")
         def encerrarStream():
@@ -50,7 +61,14 @@ class Stream:
 
             self.__stream.encerrar()
             self.__stream = None
-            return redirect ("/?mensagem=Stream encerrado!")
+
+            res = redirect ("/?mensagem=Stream encerrado!")
+            res.delete_cookie("stream_id")
+            res.delete_cookie("stream_url")
+            res.delete_cookie("stream_key")
+            res.delete_cookie("stream_status")
+
+            return res
 
         @app.route("/stream/info")
         def getInfo():
