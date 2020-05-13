@@ -9,6 +9,16 @@ def getSession():
         "user-agent" : USER_AGENT,
         "Referer" : "https://www.instagram.com/"
     }
+
+    def atualizarCSRFToken(token):
+        if token is None:
+            return
+        
+        session.headers.update({"X-CSRFToken": token})
+        return token
+
+    session.atualizarCSRFToken = atualizarCSRFToken
+    session.atualizarCSRFToken(request.cookies.get("csrf_token"))
     
     cookies = request.cookies.to_dict()
     for c in cookies:
@@ -66,7 +76,8 @@ def getStream(criarStream=True):
     try:
         stream = Stream(getSession, criarStream)
         return stream
-    except:
+    except Exception as e:
+        print(e)
         return None
 
 def getComentarios(stream, last_comment):

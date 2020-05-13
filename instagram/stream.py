@@ -8,6 +8,7 @@ class Stream():
         self.url = None
         self.key = None
         self.iniciado = False
+        self.__cookies = {}
 
         if not criarStream:
             self.id = request.cookies.get("stream_id")
@@ -33,7 +34,8 @@ class Stream():
             "broadcast_type": "RTMP_SWAP_ENABLED",
             "internal_only": 0
         })
-        print(req.text)
+        token = self.__session.atualizarCSRFToken(req.cookies["csrftoken"])
+        
         res = req.json()
 
         self.id = str(res["broadcast_id"])
@@ -50,13 +52,24 @@ class Stream():
         print("")
         print("")
 
+        self.__cookies = self.__session.cookies.copy()
+        self.__cookies.update({"csrf_token": token})
+    
+    def getCookies(self):
+        return self.__cookies
+
     def iniciar(self):
         self.__session = self.__getSession()
         print("Iniciando stream")
         #_csrftoken=KHYH0aAV1MAuodATGwQL6pSiViT79Im4&_uuid=c2e407d1-0c08-40a4-afd4-a90e00ec6251
         req = self.__session.post("https://i.instagram.com/api/v1/live/" + self.id+ "/start/")
+        token = self.__session.atualizarCSRFToken(req.cookies["csrftoken"])
+        
         print(req.json())
         print()
+
+        self.__cookies = self.__session.cookies.copy()
+        self.__cookies.update({"csrf_token": token})
 
         self.iniciado = True
 
@@ -65,7 +78,12 @@ class Stream():
         print("Encerrando stream")
         #signed_body=d8495776e76a44abd12d7c6b753ebb7bbcf8b0fddb30b888fb6a8377a0404d21.{"_csrftoken":"KHYH0aAV1MAuodATGwQL6pSiViT79Im4","_uid":"32566605591","_uuid":"c2e407d1-0c08-40a4-afd4-a90e00ec6251","end_after_copyright_warning":"false"}&ig_sig_key_version=4
         req = self.__session.post("https://i.instagram.com/api/v1/live/" + self.id+ "/end_broadcast/")
+        token = self.__session.atualizarCSRFToken(req.cookies["csrftoken"])
+        
         print(req.json())
         print()
+
+        self.__cookies = self.__session.cookies.copy()
+        self.__cookies.update({"csrf_token": token})
 
         self.iniciado = False

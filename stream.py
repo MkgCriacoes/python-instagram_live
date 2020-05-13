@@ -30,6 +30,13 @@ class Stream:
             res.set_cookie("stream_key", self.__stream.key)
             res.set_cookie("stream_status", "criado")
 
+            cookies = self.__stream.getCookies()
+            for c in cookies:
+                if ".com" not in c.domain:
+                    res.set_cookie(c.name, c.value)
+                else:
+                    res.set_cookie("i." + c.name, c.value)
+
             return res
 
         @app.route("/stream/iniciar")
@@ -38,6 +45,7 @@ class Stream:
                 print("Erro: Faça o login antes de tentar iniciar uma stream")
                 return redirect("/login")
 
+            self.__stream = self.value
             if self.__stream is None:
                 print("Erro: Você deve criar o stream antes de iniciar")
                 return redirect("/?erro&mensagem=Você deve criar o stream antes de iniciar")
@@ -47,6 +55,13 @@ class Stream:
             res = redirect("/")
             res.set_cookie("stream_status", "iniciado")
 
+            cookies = self.__stream.getCookies()
+            for c in cookies:
+                if ".com" not in c.domain:
+                    res.set_cookie(c.name, c.value)
+                else:
+                    res.set_cookie("i." + c.name, c.value)
+
             return res
 
         @app.route("/stream/encerrar")
@@ -55,12 +70,12 @@ class Stream:
                 print("Erro: Faça o login antes de tentar encerrar uma stream")
                 return redirect("/login")
 
+            self.__stream = self.value
             if self.__stream is None:
                 print("Erro: Não existe streams para encerrar")
                 return redirect("/?erro&mensagem=Não existe streams para encerrar")
 
             self.__stream.encerrar()
-            self.__stream = None
 
             res = redirect ("/?mensagem=Stream encerrado!")
             res.delete_cookie("stream_id")
@@ -68,8 +83,17 @@ class Stream:
             res.delete_cookie("stream_key")
             res.delete_cookie("stream_status")
 
+            cookies = self.__stream.getCookies()
+            for c in cookies:
+                if ".com" not in c.domain:
+                    res.set_cookie(c.name, c.value)
+                else:
+                    res.set_cookie("i." + c.name, c.value)
+
+            self.__stream = None
             return res
 
         @app.route("/stream/info")
         def getInfo():
+            self.__stream = self.value
             return instagram.getInfo(self.__stream)
