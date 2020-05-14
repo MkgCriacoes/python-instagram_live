@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
 </head>
 <body>
-    <h2>Seja bem vindo, <span class="userId">@{{ login }}</span></h2>
+    <div id="div_user">
+        <h2>Seja bem vindo, <span class="userId">@{{ login }}</span></h2>
+        <input onclick="location.href='/login/sair'" type="button" value="Sair" />
+    </div>
     <div id="div_stream">
         {% if not stream %}
             <input onclick="location.href='/stream/criar'" type="button" value="Criar Stream" />
@@ -16,7 +19,7 @@
                 <input type="text" name="id" value="{{ stream.id }}" readonly/><br>
                 <input type="text" name="url" value="{{ stream.url }}" readonly/><br>
                 <input type="text" name="key" value="{{ stream.key }}" readonly/><br>
-                <input onclick="location.href='/stream/iniciar'"type="button" value="Iniciar Stream" />
+                <input onclick="location.href='/stream/iniciar'" type="button" value="Iniciar Stream" />
             </div>
         {% else %}
             <input type="text" name="id" value="{{ stream.id }}" readonly/><br>

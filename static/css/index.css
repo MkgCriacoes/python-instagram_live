@@ -3,6 +3,18 @@ input[type="text"]{
     margin: 10px;
 }
 
+#div_user{
+    display: inline-flex;
+}
+
+#div_user input[type="button"]{
+    position: relative;
+    top: 16px;
+    left: 115px;
+    background-color: #983a3a;
+    width: 90px;
+}
+
 #assistindo{
     background-color: #f71341;
     width: 85px;
