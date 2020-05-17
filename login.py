@@ -45,7 +45,7 @@ class Login:
 
                 return res
             except Exception as e:
-                print (e)
+                print("Erro no login: %s" % e)
                 return redirect("/login?status=Login invalido!")
 
         @app.route("/login/sair", methods=["GET"])

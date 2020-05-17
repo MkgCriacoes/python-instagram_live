@@ -1,13 +1,12 @@
-USER_AGENT = "Mozilla/5.0 (Linux; Android 7.0; Moto C Plus; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.99 Mobile Safari/537.36 Instagram 139.0.0.33.121 Android (24/7.0; 294dpi; 720x1280; moto; Moto C Plus; Moto C Plus; qcom; pt_BR)"
-
+from .constants import Constants
 import requests
 from flask import request
 
 def getSession():
     session = requests.Session()
     session.headers = {
-        "user-agent" : USER_AGENT,
-        "Referer" : "https://www.instagram.com/"
+        "user-agent" : Constants.USER_AGENT,
+        "Referer" : "https://i.instagram.com/"
     }
 
     def atualizarCSRFToken(token):

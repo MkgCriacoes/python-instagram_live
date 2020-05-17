@@ -1,3 +1,4 @@
+from .constants import Constants
 from flask import request
 
 class LoginMgr:
@@ -15,10 +16,12 @@ class LoginMgr:
         self.__session = self.__getSession()
         self.__session.cookies.clear_session_cookies()
 
-        req = self.__session.get("https://www.instagram.com/")
+        req = self.__session.get("https://i.instagram.com/")
         token = self.__session.atualizarCSRFToken(req.cookies["csrftoken"])
 
-        req = self.__session.post("https://www.instagram.com/accounts/login/ajax/", data={
+        req = self.__session.post("https://i.instagram.com/api/v1/accounts/login/", data={
+            "guid": Constants.DEVICE,
+            "device_id": Constants.ANDROID_DEVICE,
             "username": usuario,
             "password": senha
         })
