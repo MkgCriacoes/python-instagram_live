@@ -9,7 +9,7 @@ class Comentario:
         self.rotas(app)
 
     def rotas(self, app):
-        @app.route("/comentarios")
+        @app.route("/comentarios", methods=["GET"])
         def getComentarios():
             lastComent = request.args.get("lastComent")
 
@@ -20,3 +20,11 @@ class Comentario:
                 print("Novos comentários")
 
             return json.dumps(comentarios)
+
+        @app.route("/comentarios/enviar", methods=["POST"])
+        def enviarComentario():
+            comentario = request.form.get("comentario")
+
+            ComentarioMgr = instagram.ComentarioMgr(instagram.getSession)
+            comentario = ComentarioMgr.comentar(self.__stream.value, comentario)
+            return json.dumps(comentario)

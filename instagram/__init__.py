@@ -43,8 +43,6 @@ def getJoinRequests(self, stream, last_joinRequest):
         "last_fetch_ts": last_joinRequest
     })
     res = req.json()
-    print(res)
-    print()
 
     joinRequests = []
     j_dt_envio = res["fetch_ts"]
@@ -75,7 +73,5 @@ def getInfo(stream):
 
     req = session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/heartbeat_and_get_viewer_count/")
     res = req.json()
-
-    print(res)
 
     return res

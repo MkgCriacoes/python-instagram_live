@@ -30,10 +30,14 @@
         {% endif %}
     </div>
     <div id="comentarios" ></div>
+    {% if stream and stream.iniciado %}
+    <div>
+        <input type="text" id="inpt_comentario" name="comentario" placeholder="Digite algo para comentar" />
+        <input type="button" value="Comentar" onclick="comentar();" />
+    </div>
     <script>
         var lastComent = 0;
     </script>
-    {% if stream and stream.iniciado %}
     <script>
         var div_comentarios = document.getElementById("comentarios");
 
@@ -90,6 +94,20 @@
         }
 
         getComentarios();
+    </script>
+    <script>
+        var inpt_comentario = document.getElementById("inpt_comentario");
+
+        function comentar(){
+            $.ajax({
+                type: "post",
+                url: "comentarios/enviar",
+                data: "comentario=" + inpt_comentario.value,
+                dataType: "json"
+            });
+
+            inpt_comentario.value = "";
+        }
     </script>
     <script>
         var div_asistindo = document.getElementById("assistindo");

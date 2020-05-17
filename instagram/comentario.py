@@ -2,6 +2,7 @@ from flask import request
 
 from .model.usuario import Usuario
 from .model.comentario import Comentario
+from .constants import Constants
 
 class ComentarioMgr:
     def __init__(self, getSession):
@@ -16,9 +17,6 @@ class ComentarioMgr:
             "last_comment_ts" : last_comment
         })
         res = req.json()
-
-        print(res)
-        print()
 
         if res["status"] != "ok":
             return []
@@ -62,3 +60,33 @@ class ComentarioMgr:
                 comentarios.append(comentario.toJson())
 
         return comentarios
+
+    def mutarComentarios(self, stream):
+        self.__session = self.__getSession()
+        self.__session.headers.update({"X-CSRFToken": request.cookies.get("csrf_token")})
+
+        req = self.__session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/mute_comment/")
+        res = req.json()
+        print(res)
+
+    def desmutarComentarios(self, stream):
+        self.__session = self.__getSession()
+        self.__session.headers.update({"X-CSRFToken": request.cookies.get("csrf_token")})
+
+        req = self.__session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/unmute_comment/")
+        res = req.json()
+        print(res)
+
+    def comentar(self, stream, texto):
+        self.__session = self.__getSession()
+        self.__session.headers.update({"X-CSRFToken": request.cookies.get("csrf_token")})
+
+        req = self.__session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/comment/", data={
+            "comment_text": texto,
+            "live_or_vod": 1,
+            "offset_to_video_start": 0,
+            "idempotence_token": Constants.DEVICE
+        })
+        res = req.json()
+
+        return res
