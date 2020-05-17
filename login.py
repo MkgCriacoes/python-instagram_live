@@ -32,11 +32,13 @@ class Login:
             usuario = request.form.get("usuario")
             senha = request.form.get("senha")
 
+            loginMgr = instagram.LoginMgr(instagram.getSession)
+
             try:
-                instagram.fazerLogin(usuario, senha)
+                loginMgr.fazerLogin(usuario, senha)
 
                 res = redirect("/")
-                cookies = instagram.LoginMgr.getCookies()
+                cookies = loginMgr.getCookies()
                 for c in cookies:
                     if ".com" not in c.domain:
                         res.set_cookie(c.name, c.value)
