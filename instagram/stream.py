@@ -1,3 +1,4 @@
+from .constants import Constants
 import requests
 from flask import request
 
@@ -23,12 +24,16 @@ class Stream():
 
             return
 
+        token = request.cookies.get("csrf_token")
+
         self.__session = self.__getSession()
-        self.__session.headers.update({"X-CSRFToken": request.cookies.get("csrf_token")})
+        self.__session.headers.update({"X-CSRFToken": token})
 
         print("Obtendo chave do Stream")
 
         req = self.__session.post("https://i.instagram.com/api/v1/live/create/", data={
+            "_uuid": Constants.DEVICE,
+            "_csrftoken": token,
             "preview_height": 1794,
             "preview_width":  1080,
             "broadcast_type": "RTMP_SWAP_ENABLED",

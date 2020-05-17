@@ -8,9 +8,20 @@ class Login:
     @property
     def value(self):
         logado = request.cookies.get("usuario")
-        if logado is None:
+        
+        if not self.precisaAutentificar:
+            if logado is not None:
+                return logado
+
+        return False
+
+    @property
+    def precisaAutentificar(self):
+        auth = request.cookies.get("a")
+
+        if auth is None or auth==False:
             return False
-        return logado
+        return True
 
     def rotas(self, app):
         @app.route("/login", methods=["GET"])
@@ -47,6 +58,17 @@ class Login:
 
                 return res
             except Exception as e:
+                if loginMgr.auth:
+                    res = redirect("/login/auth")
+                    cookies = loginMgr.getCookies()
+                    for c in cookies:
+                        if ".com" not in c.domain:
+                            res.set_cookie(c.name, c.value)
+                        else:
+                            res.set_cookie("i." + c.name, c.value)
+                    
+                    return res
+
                 print("Erro no login: %s" % e)
                 return redirect("/login?status=Login invalido!")
 
@@ -60,6 +82,51 @@ class Login:
                 print("Deletando cookie: " + c)
                 res.delete_cookie(c)
             
-            instagram.desconectar()
+            loginMgr = instagram.LoginMgr(instagram.getSession)
+            loginMgr.desconectar()
 
             return res
+
+        @app.route("/login/auth", methods=["GET"])
+        def pedirAutentificacao():
+            if not self.precisaAutentificar:
+                return redirect("/")
+
+            formaVerificacao = request.args.get("formaVerificacao")
+            print(formaVerificacao)
+            if formaVerificacao is not None:
+                formaVerificacao = int(formaVerificacao)
+                loginMgr = instagram.LoginMgr(instagram.getSession)
+                loginMgr.auth = request.cookies.get("a")
+
+                ultimosDigitos = loginMgr.enviarCodigo(formaVerificacao)
+                return render_template("auth.html", formaVerificacao=formaVerificacao, ultimosDigitos=ultimosDigitos)
+
+            return render_template("auth.html", formaVerificacao=formaVerificacao)
+
+        @app.route("/login/auth", methods=["POST"])
+        def autentificar():
+            if not self.precisaAutentificar:
+                return redirect("/")
+                
+            codigo = request.form.get("codigo")
+
+            loginMgr = instagram.LoginMgr(instagram.getSession)
+            loginMgr.auth = request.cookies.get("a")
+
+            verificado = loginMgr.verificar(codigo)
+
+            if verificado:
+                res = redirect("/")
+
+                cookies = loginMgr.getCookies()
+                for c in cookies:
+                    if ".com" not in c.domain:
+                        res.set_cookie(c.name, c.value)
+                    else:
+                        res.set_cookie("i." + c.name, c.value)
+
+                res.delete_cookie("a")
+
+                return res
+            return redirect("/login?status=Não Foi possivel verificar!")
