@@ -6,21 +6,13 @@ import json
 
 from login import Login
 from stream import Stream
+from comentario import Comentario
 
 app = Flask(__name__)
 
 login = Login(app)
 stream = Stream(app, login)
-
-@app.route("/comentarios")
-def getComentarios():
-    lastComent = request.args.get("lastComent")
-
-    comentarios = instagram.getComentarios(stream.value, lastComent)
-    if (len(comentarios) > 0):
-        print("Novos comentários")
-
-    return json.dumps(comentarios)
+comentario = Comentario(app, login, stream)
 
 @app.route("/")
 def index():
