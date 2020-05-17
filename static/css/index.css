@@ -39,6 +39,7 @@ input[type="text"]{
     margin-top: 25px;
     font-size: 14pt;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+    animation: comentario_anim 0.5s ease-in-out;
 }
 
 #comentarios img{
@@ -56,4 +57,15 @@ input[type="text"]{
     position: relative;
     left: 18px;
     top: -6px;
+}
+
+@keyframes
+comentario_anim{
+    from{
+        opacity: 0;
+        margin-left: -200px;
+    }
+    to{
+        opacity: 1;
+    }
 }

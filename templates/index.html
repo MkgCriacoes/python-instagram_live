@@ -31,22 +31,22 @@
     </div>
     <div id="comentarios" ></div>
     {% if stream and stream.iniciado %}
-    <div>
-        <input type="text" id="inpt_comentario" onkeypress="if(event.keyCode == 13) comentar();" name="comentario" placeholder="Digite algo para comentar" />
-        <input type="button" value="Comentar" onclick="comentar();" />
-    </div>
-    <script>
-        let lastComent = 0;
-        let div_comentarios = document.getElementById("comentarios");
-        let inpt_comentario = document.getElementById("inpt_comentario");
-        let div_asistindo = document.getElementById("assistindo");
-    </script>
-    <script src="{{ url_for('static', filename='js/comentario.js') }}" type="text/javascript" ></script>
-    <script src="{{ url_for('static', filename='js/stream.js') }}" type="text/javascript" ></script>
-    <script>
-        getComentarios();
-        getInfo();
-    </script>
+        <div>
+            <input type="text" id="inpt_comentario" onkeypress="if(event.keyCode == 13) comentar();" name="comentario" placeholder="Digite algo para comentar" />
+            <input type="button" value="Comentar" onclick="comentar();" />
+        </div>
+        <script>
+            let lastComent = 0;
+            let div_comentarios = document.getElementById("comentarios");
+            let inpt_comentario = document.getElementById("inpt_comentario");
+            let div_asistindo = document.getElementById("assistindo");
+        </script>
+        <script src="{{ url_for('static', filename='js/comentario.js') }}" type="text/javascript" ></script>
+        <script src="{{ url_for('static', filename='js/stream.js') }}" type="text/javascript" ></script>
+        <script>
+            getComentarios();
+            getInfo();
+        </script>
     {% endif %}
     {% if erro %}
         {% if mensagem %}
