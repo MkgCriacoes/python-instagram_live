@@ -29,6 +29,14 @@ function getComentarios(){
         data: "lastComent=" + lastComent,
         dataType: "json",
         success: function(data){
+            comentariosAtivos = data.ativo;
+            alternarBotoesComentarios();
+            if(!comentariosAtivos){
+                setTimeout(getComentarios, 800);
+                return;
+            }
+            
+            data = data.comentarios;
             for (var a=0; a < data.length; a+=1){
                 var c_id = data[a].id,
                     c_dt_envio = data[a].dt_envio,
@@ -62,4 +70,28 @@ function comentar(){
     });
 
     inpt_comentario.value = "";
+}
+
+function alternarComentarios(){
+    $.ajax({
+        type: "post",
+        url: "comentarios/alternar",
+        data: "ocultar=" + comentariosAtivos,
+        dataType: "json",
+        success: function(ocultado){
+            comentariosAtivos = (!ocultado);
+
+            alternarBotoesComentarios();
+        }
+    });
+}
+
+function alternarBotoesComentarios(){
+    if (!comentariosAtivos){
+        bt_alternarComentario.value = "Exibir Comentários";
+        bt_alternarComentario.style.backgroundColor = "#00FF00";
+    }else{
+        bt_alternarComentario.value = "Ocultar Comentários";
+        bt_alternarComentario.style.backgroundColor = "#FF0000";
+    }
 }

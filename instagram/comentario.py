@@ -21,9 +21,10 @@ class ComentarioMgr:
         if res["status"] != "ok":
             return []
 
+        ativo = not bool(res["comment_muted"])
         comentarios = []
         
-        if res["comments"] is not None:
+        if ativo and res["comments"] is not None:
             for c in res["comments"]:
                 c_id = c["pk"]
                 c_dt_envio = c["created_at"]
@@ -42,7 +43,7 @@ class ComentarioMgr:
                 
                 comentarios.append(comentario.toJson())
 
-        if res["system_comments"] is not None:
+        if ativo and res["system_comments"] is not None:
             for c in res["system_comments"]:
                 c_id = c["pk"]
                 c_dt_envio = c["created_at"]
@@ -59,9 +60,12 @@ class ComentarioMgr:
                 
                 comentarios.append(comentario.toJson())
 
-        return comentarios
+        return {
+            "comentarios": comentarios,
+            "ativo": ativo
+        }
 
-    def mutarComentarios(self, stream):
+    def ocultarComentarios(self, stream):
         self.__session = self.__getSession()
         self.__session.headers.update({"X-CSRFToken": request.cookies.get("csrf_token")})
 
@@ -69,7 +73,7 @@ class ComentarioMgr:
         res = req.json()
         print(res)
 
-    def desmutarComentarios(self, stream):
+    def exibirComentarios(self, stream):
         self.__session = self.__getSession()
         self.__session.headers.update({"X-CSRFToken": request.cookies.get("csrf_token")})
 
