@@ -34,7 +34,7 @@ class LoginMgr:
         self.__cookies.update({"usuario": usuario})
         self.__cookies.update({"csrf_token": token})
 
-        if res["status"] != "ok" or res["authenticated"] != True:
+        if res["status"] != "ok" or res["logged_in_user"] is None:
             if res["message"] == "challenge_required":
                 self.auth = res["challenge"]["api_path"]
                 self.__cookies.update({"a": self.auth})
