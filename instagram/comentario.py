@@ -71,7 +71,7 @@ class ComentarioMgr:
 
         req = self.__session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/mute_comment/")
         res = req.json()
-        print(res)
+        return res
 
     def exibirComentarios(self, stream):
         self.__session = self.__getSession()
@@ -79,7 +79,7 @@ class ComentarioMgr:
 
         req = self.__session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/unmute_comment/")
         res = req.json()
-        print(res)
+        return res
 
     def comentar(self, stream, texto):
         self.__session = self.__getSession()

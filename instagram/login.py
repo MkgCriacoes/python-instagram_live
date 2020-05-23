@@ -93,6 +93,4 @@ class LoginMgr:
         self.__session = self.__getSession()
 
         req = self.__session.post("https://www.instagram.com/accounts/logout/ajax/")
-        res = req.text
-        print(res)
         self.__cookies.clear()

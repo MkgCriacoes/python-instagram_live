@@ -29,4 +29,4 @@ def index():
     return render_template("index.html", login=login.value, stream=stream.value, erro=erro, mensagem=mensagem)
 
 if __name__ == '__main__':
-    app.run(port=80, debug=True)
+    app.run(port=80, debug=False)

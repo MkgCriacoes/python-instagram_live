@@ -4,8 +4,6 @@ function getInfo(){
         url: "stream/info",
         dataType: "json",
         success: function(data){
-            console.log(data);
-
             var viewCount = data.viewer_count;
             var status = data.broadcast_status;
 

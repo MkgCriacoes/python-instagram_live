@@ -32,9 +32,6 @@ from .comentario import ComentarioMgr
 from .stream import Stream
 from .model.usuario import Usuario
 
-#https://instagram.fnat1-1.fna.fbcdn.net/hvideo-vll2/_nc_cat-110/v/r-ggunUiM2nPQW78cwTI2/live-dash/live-hd-a/17943426871352037_0-3521800.m4a
-#https://i.instagram.com/api/v1/live/" + live_id+ "/get_final_viewer_list/
-
 def getJoinRequests(self, stream, last_joinRequest):
     session = getSession()
 

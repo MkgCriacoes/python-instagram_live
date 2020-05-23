@@ -78,8 +78,8 @@ class Login:
                 return redirect("/")
 
             res = redirect("/?sair=true")
+            print("Deletando cookies...")
             for c in request.cookies:
-                print("Deletando cookie: " + c)
                 res.delete_cookie(c)
             
             loginMgr = instagram.LoginMgr(instagram.getSession)
@@ -93,7 +93,6 @@ class Login:
                 return redirect("/")
 
             formaVerificacao = request.args.get("formaVerificacao")
-            print(formaVerificacao)
             if formaVerificacao is not None:
                 formaVerificacao = int(formaVerificacao)
                 loginMgr = instagram.LoginMgr(instagram.getSession)

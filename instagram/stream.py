@@ -66,11 +66,10 @@ class Stream():
     def iniciar(self):
         self.__session = self.__getSession()
         print("Iniciando stream")
-        #_csrftoken=KHYH0aAV1MAuodATGwQL6pSiViT79Im4&_uuid=c2e407d1-0c08-40a4-afd4-a90e00ec6251
+        
         req = self.__session.post("https://i.instagram.com/api/v1/live/" + self.id+ "/start/")
         token = self.__session.atualizarCSRFToken(req.cookies["csrftoken"])
         
-        print(req.json())
         print()
 
         self.__cookies = self.__session.cookies.copy()
@@ -81,11 +80,10 @@ class Stream():
     def encerrar(self):
         self.__session = self.__getSession()
         print("Encerrando stream")
-        #signed_body=d8495776e76a44abd12d7c6b753ebb7bbcf8b0fddb30b888fb6a8377a0404d21.{"_csrftoken":"KHYH0aAV1MAuodATGwQL6pSiViT79Im4","_uid":"32566605591","_uuid":"c2e407d1-0c08-40a4-afd4-a90e00ec6251","end_after_copyright_warning":"false"}&ig_sig_key_version=4
+        
         req = self.__session.post("https://i.instagram.com/api/v1/live/" + self.id+ "/end_broadcast/")
         token = self.__session.atualizarCSRFToken(req.cookies["csrftoken"])
         
-        print(req.json())
         print()
 
         self.__cookies = self.__session.cookies.copy()
