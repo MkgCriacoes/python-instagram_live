@@ -1,50 +1,74 @@
-from .stream import Stream
+from .constants import Constants
 import requests
+from flask import request
 
-#https://i.instagram.com/api/v1/live/" + live_id+ "/get_comment/?last_comment_ts=0
-#https://i.instagram.com/api/v1/live/" + live_id+ "/get_final_viewer_list/
+def getSession():
+    session = requests.Session()
+    session.headers = {
+        "user-agent" : Constants.USER_AGENT,
+        "Referer" : "https://i.instagram.com/"
+    }
 
-URL = "https://www.instagram.com/"
-USER_AGENT = "Mozilla/5.0 (Linux; Android 7.0; Moto C Plus; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/80.0.3987.99 Mobile Safari/537.36 Instagram 139.0.0.33.121 Android (24/7.0; 294dpi; 720x1280; moto; Moto C Plus; Moto C Plus; qcom; pt_BR)"
+    def atualizarCSRFToken(token):
+        if token is None:
+            return
+        
+        session.headers.update({"X-CSRFToken": token})
+        return token
 
-session = requests.Session()
-session.headers = {
-    "user-agent" : USER_AGENT,
-    "Referer" : URL
-}
+    session.atualizarCSRFToken = atualizarCSRFToken
+    session.atualizarCSRFToken(request.cookies.get("csrf_token"))
+    
+    cookies = request.cookies.to_dict()
+    for c in cookies:
+        if c.startswith("i."):
+            cookie = requests.cookies.create_cookie(c[2:], cookies[c], domain=".instagram.com")
+            session.cookies.set_cookie(cookie)
 
-def atualizarCSRFToken(session, token):
-    session.headers.update({"X-CSRFToken": token})
+    return session
 
-def fazerLogin(usuario, senha):
-    print("Fazendo login no instagram @%s...." % usuario)
+from .login import LoginMgr
+from .comentario import ComentarioMgr
+from .stream import Stream
+from .model.usuario import Usuario
 
-    req = session.get(URL)
-    atualizarCSRFToken(session, req.cookies["csrftoken"])
+def getJoinRequests(self, stream, last_joinRequest):
+    session = getSession()
 
-    req = session.post(URL + "accounts/login/ajax/", data={
-        "username": usuario,
-        "password": senha
+    req = session.get("https://i.instagram.com/api/v1/live/" + stream.id+ "/get_join_request_counts/", data={
+        "last_seen_ts": last_joinRequest,
+        "last_fetch_ts": last_joinRequest
     })
     res = req.json()
-    atualizarCSRFToken(session, req.cookies["csrftoken"])
 
-    if res["status"] != "ok" or res["authenticated"] != True:
-        raise Exception("Erro no login: %s" % res)
+    joinRequests = []
+    j_dt_envio = res["fetch_ts"]
+    if (j_dt_envio is None) or (int(j_dt_envio) <= int(last_joinRequest)):
+        return joinRequests
+    
+    if res["users"]:
+        for j in res["users"]:
+            u_id = j["pk"]
+            u_nome = j["username"]
+            u_img = j["profile_pic_url"]
 
-    print("Logado com sucesso!")
-    print()
+            usuario = Usuario(u_id, u_nome, u_img)
+            joinRequests.append(usuario.toJson())
+    
+    return joinRequests
 
-def getJoinRequests():
-    req = session.get("https://i.instagram.com/api/v1/live/" + live_id+ "/get_join_request_counts/", data={
-        "last_total_count": 0,
-        "last_seen_ts": 0,
-        "last_fetch_ts": 0
-    })
+def getStream(criarStream=True):
+    try:
+        stream = Stream(getSession, criarStream)
+        return stream
+    except Exception as e:
+        print(e)
+        return None
+
+def getInfo(stream):
+    session = getSession()
+
+    req = session.post("https://i.instagram.com/api/v1/live/" + stream.id + "/heartbeat_and_get_viewer_count/")
     res = req.json()
-    print(res)
-    print()
 
-def getStream():
-    stream = Stream(session)
-    return stream
+    return res

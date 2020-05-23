@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}"/>
+</head>
+<body>
+    <div id="div_user">
+        <h2>Seja bem vindo, <span class="userId">@{{ login }}</span></h2>
+        <input onclick="location.href='/login/sair'" type="button" value="Sair" />
+    </div>
+    <div id="div_stream">
+        {% if not stream %}
+            <input onclick="location.href='/stream/criar'" type="button" value="Criar Stream" />
+        {% elif not stream.iniciado %}
+            <div>
+                <input type="text" name="id" value="{{ stream.id }}" readonly/><br>
+                <input type="text" name="url" value="{{ stream.url }}" readonly/><br>
+                <input type="text" name="key" value="{{ stream.key }}" readonly/><br>
+                <input onclick="location.href='/stream/iniciar'" type="button" value="Iniciar Stream" />
+            </div>
+        {% else %}
+            <input type="text" name="id" value="{{ stream.id }}" readonly/><br>
+            <div style="display: inline-flex;" >
+                <div id="assistindo"></div>
+                <input onclick="location.href='/stream/encerrar'" style="margin-left: 70px;" type="button" value="Encerrar Stream" />
+            </div>
+        {% endif %}
+    </div>
+    {% if stream and stream.iniciado %}
+        <div id="comentarios" ></div>
+        <div>
+            <input type="text" id="inpt_comentario" onkeypress="if(event.keyCode == 13) comentar();" name="comentario" placeholder="Digite algo para comentar" />
+            <input type="button" value="Comentar" onclick="comentar();" />
+            <input type="button" id="bt_alternarComentario" value="" style="display: block; margin-left: 14px; margin-top: 10px;" onclick="alternarComentarios();" />
+        </div>
+        <script>
+            let comentariosAtivos = false;
+            let lastComent = 0;
+            let div_comentarios = document.getElementById("comentarios");
+            let inpt_comentario = document.getElementById("inpt_comentario");
+            let bt_alternarComentario = document.getElementById("bt_alternarComentario");
+            let div_asistindo = document.getElementById("assistindo");
+        </script>
+        <script src="{{ url_for('static', filename='js/comentario.js') }}" type="text/javascript" ></script>
+        <script src="{{ url_for('static', filename='js/stream.js') }}" type="text/javascript" ></script>
+        <script>
+            getComentarios();
+            getInfo();
+        </script>
+    {% endif %}
+    {% if erro %}
+        {% if mensagem %}
+            <script>
+                alert("Erro: {{ mensagem }}");
+            </script>
+        {% else %}
+            <script>
+                alert("Erro: Ocorreu um erro desconhecido!");
+            </script>
+        {% endif %}
+        <script>
+            location.href = ".";
+        </script>
+    {% elif mensagem %}
+        <script>
+            alert("{{ mensagem }}");
+        </script>
+        <script>
+            location.href = ".";
+        </script>
+    {% endif %}
+</body>
+</html>

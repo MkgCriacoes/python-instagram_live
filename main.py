@@ -1,11 +1,32 @@
 import instagram
 import time
+import flask
+from flask import Flask, render_template, request, redirect
+import json
 
-instagram.fazerLogin("USUARIO", "SENHA")
-stream = instagram.getStream()
+from login import Login
+from stream import Stream
+from comentario import Comentario
 
-time.sleep(2)
-stream.iniciar()
+app = Flask(__name__)
 
-time.sleep(2)
-stream.encerrar()
+login = Login(app)
+stream = Stream(app, login)
+comentario = Comentario(app, login, stream)
+
+@app.route("/")
+def index():
+    sair = request.args.get("sair")
+    if sair is not None:
+        stream.refreshStream()
+
+    if not login.value:
+        return redirect("/login")
+
+    erro = request.args.get("erro")
+    mensagem = request.args.get("mensagem")
+
+    return render_template("index.html", login=login.value, stream=stream.value, erro=erro, mensagem=mensagem)
+
+if __name__ == '__main__':
+    app.run(port=80, debug=False)
