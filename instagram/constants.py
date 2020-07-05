@@ -9,12 +9,12 @@ class Constants:
 
     ANDROID_VERSION = 24
     ANDROID_RELEASE = '7.0'
-    PHONE_MANUFACTURER = 'motorola'
-    PHONE_DEVICE = 'Moto C Plus'
-    PHONE_MODEL = 'panell_23_dl'
+    PHONE_MANUFACTURER = 'MkgCriacoes'
+    PHONE_DEVICE = 'MkLive'
+    PHONE_MODEL = 'MkLive'
     PHONE_DPI = '240dpi'
     PHONE_RESOLUTION = '720x1280'
-    PHONE_CHIPSET = 'mt6737'
+    PHONE_CHIPSET = 'mk6737'
     VERSION_CODE = '138226743'
 
     USER_AGENT = \
