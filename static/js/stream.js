@@ -7,11 +7,13 @@ function getInfo(){
             var viewCount = data.viewer_count;
             var status = data.broadcast_status;
 
-            div_asistindo.innerHTML = "AO VIVO<span>" + viewCount + "</span>";
-
-            if (status == "stoped"){
+            if (status == "interrupted"){
+                div_asistindo.innerHTML = "PAUSADO<span>.</span>";
+            }else if (status == "stopped"){
                 location.href = "stream/encerrar";
                 return;
+            }else{
+                div_asistindo.innerHTML = "AO VIVO<span>" + viewCount + "</span>";
             }
 
             setTimeout(getInfo, 2000);
