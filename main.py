@@ -7,12 +7,14 @@ import json
 from login import Login
 from stream import Stream
 from comentario import Comentario
+from midia import Midia
 
 app = Flask(__name__)
 
 login = Login(app)
 stream = Stream(app, login)
 comentario = Comentario(app, login, stream)
+midia = Midia(app, stream)
 
 @app.route("/")
 def index():
