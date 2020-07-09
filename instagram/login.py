@@ -31,7 +31,7 @@ class LoginMgr:
         res = req.json()
         
         self.__cookies = self.__session.cookies.copy()
-        self.__cookies.update({"usuario": usuario})
+        self.__cookies.update({"usuario": req.cookies["ds_user"]})
         self.__cookies.update({"csrf_token": token})
 
         if res["status"] != "ok" or res["logged_in_user"] is None:
