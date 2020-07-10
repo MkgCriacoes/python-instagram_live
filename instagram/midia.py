@@ -27,10 +27,11 @@ class Midia:
         req.raise_for_status()
         return req.content
 
-    def midia(self, url, stream_id):
+    def midia(self, url, stream_id, iniciado):
         self.__session = self.__getSession()
-
-        initFile = ".midia_" + stream_id + "-init." + url[-3:]
+        
+        initFile = os.path.expandvars("%temp%\\")
+        initFile += ".midia_" + stream_id + "-init." + url[-3:]
         content = bytes()
 
         # Se o arquivo solicitado não for o init, retorne os bytes
@@ -44,7 +45,7 @@ class Midia:
             f.write(content)
             f.close()
             return content
-        else: # Se o arquivo solicitado for o init e tiver sido baixado, leia e retorne os bytes
+        elif not iniciado: # Se o arquivo solicitado for o init e tiver sido baixado, leia e retorne os bytes
             f = open(initFile, "rb")
             content = f.read()
             f.close()

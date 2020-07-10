@@ -1,5 +1,5 @@
 import instagram
-from flask import request, redirect, render_template, make_response
+from flask import request, redirect, render_template, make_response, Response, stream_with_context
 import xmltodict
 
 class Midia:
@@ -74,40 +74,39 @@ class Midia:
 
         return midia
 
-    def __midia(self, url):
+    def __midia(self, url, iniciado):
         stream = self.__stream.value
-        return instagram.Midia.midia(url, stream.id)
+        return instagram.Midia.midia(url, stream.id, iniciado)
     
     def rotas(self, app):
-        @app.route("/midia/video")
-        def getVideo():
+        def getMidiaContent(k, iniciado=False):
             midia = self.__info()
             content = bytes()
 
-            for v in midia["videos"]:
-                content += self.__midia(v["url"])
+            for m in midia[k]:
+                content += self.__midia(m["url"], iniciado)
+                iniciado = True
+            return content
+            
+        def genMidia(k):
+            iniciado = False
+            with app.app_context():
+                while self.__stream.value is not None:
+                    content = getMidiaContent(k)
+                    iniciado = True
+                    yield content
 
-            return make_response(
-                content,
-                200,
-                {
-                    "content-type": "video/mp4"
-                }
-            )
+
+        @app.route("/midia/video")
+        def getVideo():
+            return Response(stream_with_context(genMidia("videos")))
 
         @app.route("/midia/audio")
         def getAudio():
-            midia = self.__info()
-            content = bytes()
-
-            for a in midia["audios"]:
-                content += self.__midia(a["url"])
-
             return make_response(
-                content,
+                getMidiaContent("audios"),
                 200,
                 {
-                    "content-type": "video/mp4"
+                    "content-type": "audio/mp4"
                 }
             )
-        

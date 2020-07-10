@@ -31,8 +31,8 @@
     </div>
     {% if stream and stream.iniciado %}
         <video style="z-index: 20000; background: black; max-width: 100%; height: 555px;" id="video" controls autoplay>
-            <source src="midia/video" />
-            <source src="midia/audio" />
+            <source src="midia/video" type="video/mp4" />
+            <source src="midia/audio" type="audio/mp4" />
         </video>
         <div id="comentarios" ></div>
         <div>
@@ -54,7 +54,6 @@
         <script>
             getComentarios();
             getInfo();
-            atualizarMidia();
         </script>
     {% endif %}
     {% if erro %}

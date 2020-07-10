@@ -25,8 +25,3 @@ function getInfo(){
     });
 }
 
-function atualizarMidia(){
-    video.onended = function() {
-        video.load();
-    };
-}
