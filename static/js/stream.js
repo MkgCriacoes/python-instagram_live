@@ -25,3 +25,19 @@ function getInfo(){
     });
 }
 
+function atualizarTRestante(){
+    setInterval(function(){
+        var now = new Date().getTime();
+        var dif = startTime - now;
+        dif = new Date(dif);
+        dif.setHours(0);
+
+        var options = {
+            "hour": "numeric",
+            "minute": "numeric",
+            "second": "numeric"
+        };
+        document.getElementById("tRestante").innerText = dif.toLocaleString("pt-BR", options);
+    }, 1000);
+}
+

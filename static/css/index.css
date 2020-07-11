@@ -67,6 +67,16 @@ input[type="text"]{
     margin-right: 71px;
 }
 
+#div_tRestante{
+    background-color: #983a3a;
+    width: 120px;
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 10px;
+    padding: 8px;
+    margin-left: 47px;
+}
+
 @keyframes
 comentario_anim{
     from{

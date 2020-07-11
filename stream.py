@@ -54,6 +54,7 @@ class Stream:
 
             res = redirect("/")
             res.set_cookie("stream_status", "iniciado")
+            res.set_cookie("stream_startTime", str(self.__stream.startTime))
 
             cookies = self.__stream.getCookies()
             for c in cookies:

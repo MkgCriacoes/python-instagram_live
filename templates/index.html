@@ -25,6 +25,9 @@
             <input type="text" name="id" value="{{ stream.id }}" readonly/><br>
             <div style="display: inline-flex;" >
                 <div id="assistindo"></div>
+                <div id="div_tRestante">Tempo Restante
+                    <span id="tRestante">00:00:00</span>
+                </div>
                 <input onclick="location.href='/stream/encerrar'" style="margin-left: 70px;" type="button" value="Encerrar Stream" />
             </div>
         {% endif %}
@@ -53,12 +56,16 @@
             let bt_alternarComentario = document.getElementById("bt_alternarComentario");
             let div_asistindo = document.getElementById("assistindo");
             let video = document.getElementById("video");
+            let tRestante = document.getElementById("tRestante");
+            let startTime = new Date({{ stream.startTime }} * 1000);
+            startTime.setHours(startTime.getHours() + 1);
         </script>
         <script src="{{ url_for('static', filename='js/comentario.js') }}" type="text/javascript" ></script>
         <script src="{{ url_for('static', filename='js/stream.js') }}" type="text/javascript" ></script>
         <script>
             getComentarios();
             getInfo();
+            atualizarTRestante();
         </script>
     {% endif %}
     {% if erro %}
