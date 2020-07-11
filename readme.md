@@ -26,6 +26,8 @@ Para encerrar o servidor basta aperta *"ctrl" + "c"* no cmd ou terminal.
 - Ver os comentários em tempo real
 - Comentar
 - Ocultar/Exibir comentários
+- Exibir retorno do vídeo
+- Exibindo tempo restante para o limite de 1 hora no Instagram
 
 ### Script Baseado Nestes Repositórios
 - [Instagram-PHP-API](https://github.com/cosenary/Instagram-PHP-API)

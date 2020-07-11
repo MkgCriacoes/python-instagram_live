@@ -25,16 +25,28 @@
             <input type="text" name="id" value="{{ stream.id }}" readonly/><br>
             <div style="display: inline-flex;" >
                 <div id="assistindo"></div>
+                <div id="div_tRestante">Tempo Restante
+                    <span id="tRestante">00:00:00</span>
+                </div>
                 <input onclick="location.href='/stream/encerrar'" style="margin-left: 70px;" type="button" value="Encerrar Stream" />
             </div>
         {% endif %}
     </div>
     {% if stream and stream.iniciado %}
-        <div id="comentarios" ></div>
         <div>
-            <input type="text" id="inpt_comentario" onkeypress="if(event.keyCode == 13) comentar();" name="comentario" placeholder="Digite algo para comentar" />
-            <input type="button" value="Comentar" onclick="comentar();" />
-            <input type="button" id="bt_alternarComentario" value="" style="display: block; margin-left: 14px; margin-top: 10px;" onclick="alternarComentarios();" />
+            <div id="player">
+                <video style="z-index: 20000; background: black; width: 320px;  height: 478px;" id="video" autoplay>
+                    <source src="midia/video" type="video/mp4" />
+                </video>
+            </div>
+            <div id="body_comentarios">
+                <div id="comentarios" ></div>
+                <div>
+                    <input type="text" id="inpt_comentario" onkeypress="if(event.keyCode == 13) comentar();" name="comentario" placeholder="Digite algo para comentar" />
+                    <input type="button" value="Comentar" onclick="comentar();" />
+                    <input type="button" id="bt_alternarComentario" value="" style="display: block; margin-left: 14px; margin-top: 10px;" onclick="alternarComentarios();" />
+                </div>
+            </div>
         </div>
         <script>
             let comentariosAtivos = false;
@@ -43,12 +55,17 @@
             let inpt_comentario = document.getElementById("inpt_comentario");
             let bt_alternarComentario = document.getElementById("bt_alternarComentario");
             let div_asistindo = document.getElementById("assistindo");
+            let video = document.getElementById("video");
+            let tRestante = document.getElementById("tRestante");
+            let startTime = new Date({{ stream.startTime }} * 1000);
+            startTime.setHours(startTime.getHours() + 1);
         </script>
         <script src="{{ url_for('static', filename='js/comentario.js') }}" type="text/javascript" ></script>
         <script src="{{ url_for('static', filename='js/stream.js') }}" type="text/javascript" ></script>
         <script>
             getComentarios();
             getInfo();
+            atualizarTRestante();
         </script>
     {% endif %}
     {% if erro %}

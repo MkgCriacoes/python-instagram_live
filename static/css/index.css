@@ -32,6 +32,8 @@ input[type="text"]{
 #comentarios{
     height: 400px;
     overflow-y: auto;
+    border-left: solid 1px;
+    padding-left: 17px;
 }
 
 #comentarios div{
@@ -57,6 +59,22 @@ input[type="text"]{
     position: relative;
     left: 18px;
     top: -6px;
+}
+
+#player{
+    float: left;
+    margin: 15px;
+    margin-right: 71px;
+}
+
+#div_tRestante{
+    background-color: #983a3a;
+    width: 120px;
+    color: #FFFFFF;
+    text-align: center;
+    border-radius: 10px;
+    padding: 8px;
+    margin-left: 47px;
 }
 
 @keyframes

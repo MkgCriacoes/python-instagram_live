@@ -30,7 +30,10 @@ def getSession():
 from .login import LoginMgr
 from .comentario import ComentarioMgr
 from .stream import Stream
+from .midia import Midia
 from .model.usuario import Usuario
+
+Midia = Midia(getSession)
 
 def getJoinRequests(self, stream, last_joinRequest):
     session = getSession()

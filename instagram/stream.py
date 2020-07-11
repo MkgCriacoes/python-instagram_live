@@ -1,6 +1,7 @@
 from .constants import Constants
 import requests
 from flask import request
+from datetime import datetime
 
 class Stream():
     def __init__(self, getSession, criarStream=True):
@@ -9,6 +10,7 @@ class Stream():
         self.url = None
         self.key = None
         self.iniciado = False
+        self.startTime = None
         self.__cookies = {}
 
         if not criarStream:
@@ -16,6 +18,7 @@ class Stream():
             self.url = request.cookies.get("stream_url")
             self.key = request.cookies.get("stream_key")
             self.iniciado = request.cookies.get("stream_status")
+            self.startTime = request.cookies.get("stream_startTime")
 
             self.iniciado = (self.iniciado == "iniciado")
 
@@ -76,6 +79,7 @@ class Stream():
         self.__cookies.update({"csrf_token": token})
 
         self.iniciado = True
+        self.startTime = int(datetime.now().timestamp())
 
     def encerrar(self):
         self.__session = self.__getSession()

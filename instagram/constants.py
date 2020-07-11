@@ -6,6 +6,8 @@ class Constants:
     """
 
     APP_VERSION = '76.0.0.15.395'
+    WIN_VERSION = "10.0"
+    CHROME_VERSION = "83.0.4103.106"
 
     ANDROID_VERSION = 24
     ANDROID_RELEASE = '7.0'
