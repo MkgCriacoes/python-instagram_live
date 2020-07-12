@@ -1,0 +1,46 @@
+name: Criar Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  release:
+    if: github.event.pull_request.merged == true
+    
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Obter versão
+      run: |
+        if [ -f "pom.xml" ]; then
+          mvn clean
+          TAG_VERSION=`mvn clean | grep 'Building' | tr " " "\n" | tail -1`
+          echo "::set-env name=TAG_VERSION::$TAG_VERSION"
+          echo Versão encontrada no pom.xml $TAG_VERSION
+        elif [ -f "version.txt" ]; then
+          TAG_VERSION=`cat version.txt`
+          echo "::set-env name=TAG_VERSION::$TAG_VERSION"
+          echo Versão encontrada no version.txt $TAG_VERSION
+        else
+          echo "Erro: Não foi possivel obter a versão para a TAG!"
+          exit 1
+        fi
+
+        echo Gerando a release ${{ env.TAG_VERSION }}
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+          tag_name: ${{ env.TAG_VERSION }}
+          release_name: ${{ env.TAG_VERSION }} - ${{ github.event.pull_request.title }}
+          body: |
+            ${{ github.event.pull_request.body }}
+          draft: false
+          prerelease: false
