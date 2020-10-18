@@ -49,4 +49,4 @@ class Constants:
         )
 
     DEVICE = uuid.uuid1()
-    ANDROID_DEVICE = "android:%s" % DEVICE
+    ANDROID_DEVICE = "android-%s" % DEVICE
