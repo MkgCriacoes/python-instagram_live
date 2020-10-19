@@ -27,19 +27,25 @@ class LoginMgr:
             "password": senha
         })
         token = self.__session.atualizarCSRFToken(req.cookies["csrftoken"])
-
-        res = req.json()
+        if req.text.index("{") == -1:
+            return req.text
         
+        res = req.json()
+
         self.__cookies = self.__session.cookies.copy()
-        self.__cookies.update({"usuario": req.cookies["ds_user"]})
         self.__cookies.update({"csrf_token": token})
 
         if res["status"] != "ok" or res["logged_in_user"] is None:
             if res["message"] == "challenge_required":
                 self.auth = res["challenge"]["api_path"]
                 self.__cookies.update({"a": self.auth})
-                raise Exception("Erro no login: Necessário autentificar!")
-            raise Exception("Erro no login: %s" % res)
+                print("Necessário Autentificar!")
+                return
+            if res["message"] == "The password you entered is incorrect. Please try again.":
+                return "Login invalido"
+            return res["message"]
+
+        self.__cookies.update({"usuario": req.cookies["ds_user"]})
 
         print("Logado com sucesso!")
         print()
