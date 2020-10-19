@@ -5,7 +5,7 @@ class Constants:
        https://github.com/ping/instagram_private_api/tree/master/instagram_private_api
     """
 
-    APP_VERSION = '76.0.0.15.395'
+    APP_VERSION = '128.0.0.26.128'
     WIN_VERSION = "10.0"
     CHROME_VERSION = "83.0.4103.106"
 
@@ -17,7 +17,7 @@ class Constants:
     PHONE_DPI = '240dpi'
     PHONE_RESOLUTION = '720x1280'
     PHONE_CHIPSET = 'mk6737'
-    VERSION_CODE = '138226743'
+    VERSION_CODE = '197825254'
 
     USER_AGENT = \
         "Mozilla/5.0 (Linux; Android %s; %s; wv) " \
@@ -49,4 +49,4 @@ class Constants:
         )
 
     DEVICE = uuid.uuid1()
-    ANDROID_DEVICE = "android:%s" % DEVICE
+    ANDROID_DEVICE = "android-%s" % DEVICE

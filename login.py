@@ -45,19 +45,14 @@ class Login:
 
             loginMgr = instagram.LoginMgr(instagram.getSession)
 
+            loginStatus = None
             try:
-                loginMgr.fazerLogin(usuario, senha)
+                loginStatus = loginMgr.fazerLogin(usuario, senha)
 
-                res = redirect("/")
-                cookies = loginMgr.getCookies()
-                for c in cookies:
-                    if ".com" not in c.domain:
-                        res.set_cookie(c.name, c.value)
-                    else:
-                        res.set_cookie("i." + c.name, c.value)
+                if loginStatus is not None:
+                    print("Erro no login: %s" % loginStatus)
+                    return redirect("/login?status=%s" % loginStatus)
 
-                return res
-            except Exception as e:
                 if loginMgr.auth:
                     res = redirect("/login/auth")
                     cookies = loginMgr.getCookies()
@@ -69,8 +64,22 @@ class Login:
                     
                     return res
 
-                print("Erro no login: %s" % e)
-                return redirect("/login?status=Login invalido!")
+                res = redirect("/")
+                cookies = loginMgr.getCookies()
+                for c in cookies:
+                    if ".com" not in c.domain:
+                        res.set_cookie(c.name, c.value)
+                    else:
+                        res.set_cookie("i." + c.name, c.value)
+
+                return res
+            except Exception as e:
+                erro = e
+                if loginStatus is not None:
+                    erro = loginStatus
+
+                print("Erro no login: %s" % erro)
+                return redirect("/login?status=%s" % erro)
 
         @app.route("/login/sair", methods=["GET"])
         def desconectar():
