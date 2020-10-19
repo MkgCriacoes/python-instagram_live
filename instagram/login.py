@@ -86,10 +86,11 @@ class LoginMgr:
         res = req.json()
 
         if res["status"] == "ok":
-            logado = res["logged_in_user"]
+            logado = res["logged_in_user"]["username"]
             if logado is not None and len(logado) > 0:
                 self.__cookies = self.__session.cookies.copy()
                 self.__cookies.update({"csrf_token": token})
+                self.__cookies.update({"usuario": logado})
 
                 return True
 
